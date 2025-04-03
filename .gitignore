@@ -1,3 +1,27 @@
 venv
 .env
 /logs/
+# Ignore Python Bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore Docker files
+docker-compose.yml
+Dockerfile
+*.env
+
+# Ignore MySQL Database and Logs
+*.sqlite3
+*.log
+
+# Ignore sensitive files (e.g., .env with credentials)
+.env
+.secrets
+
+# Ignore other configuration or secret files
+*.bak

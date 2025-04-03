@@ -1,0 +1,268 @@
+[
+{
+  "model": "user_authentication.user",
+  "pk": "03980479-ce3f-45ed-8b77-41cc6d58edb0",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T15:02:59.011Z",
+    "email": "new_test102@gmail.com",
+    "password": "pbkdf2_sha256$870000$owmpCS6lUMCqvNRFgivn15$dVGqxJur8PRw5+Dww+bUuUvakarXzXqvuRN8P7MD3cM=",
+    "phone_number": "+2348034701250",
+    "state": "lagos",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743692578/vp5ukqdserimxw9wcovq.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T15:03:00.000Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.user",
+  "pk": "04e0e907-7c7e-4fc6-97fb-f0dc9feb51f0",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T15:01:01.818Z",
+    "email": "new_test101@gmail.com",
+    "password": "pbkdf2_sha256$870000$KXzyfB3OwYmQyzP3UxH9yx$gbY5YFtS15EYdue6a1MNh3PuEnGpvuxZURxY6H2uRM8=",
+    "phone_number": "+2348034701250",
+    "state": "lagos",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743692461/occrpk1hdcbyc53rskcn.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T15:01:02.660Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.user",
+  "pk": "2c0ea75a-65e3-41c2-9608-71f38a16883d",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T14:13:54.638Z",
+    "email": "test@gmail.com",
+    "password": "pbkdf2_sha256$870000$bqQWm4XpMZL5PjJe6GTBbh$fMb5skbl6KM2FV+RWdZFxv035+pNnchUVNNJiwaRx/4=",
+    "phone_number": "+2348034701250",
+    "state": "",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743689634/bjcdrrugrxixif9fpvht.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T14:13:56.483Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.user",
+  "pk": "60e20683-649c-43bf-8fa7-fd35aa6061ee",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T14:31:04.838Z",
+    "email": "test101@gmail.com",
+    "password": "pbkdf2_sha256$870000$EknoZ9bDyYPcd390S914D2$ULV8m1qGzuPlffTxo90zAYWNXjmMi5CGPQ3ysSvVSzg=",
+    "phone_number": "+2348034701250",
+    "state": "",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743690664/ckwbjoaqqq4vb6karfew.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T14:31:06.479Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.user",
+  "pk": "a1ed4838-d166-4157-99ef-6b2e86f11028",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T14:44:10.737Z",
+    "email": "new_test@gmail.com",
+    "password": "pbkdf2_sha256$870000$ETTjzFyGT5TP8zqWj9jfeC$+kvM36XGbxUL2tS/BRcTGDCPJn2HM9sKjF0xlIUvkUw=",
+    "phone_number": "+2348034701250",
+    "state": "lagos",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743691450/aulda8fogfl6f2gq6t73.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T14:44:11.761Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.user",
+  "pk": "c0c1cb5b-77ca-4281-8ce9-edf60e2849f1",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T14:33:12.398Z",
+    "email": "testing11@gmail.com",
+    "password": "pbkdf2_sha256$870000$UwfJEVbVHmvkzo0m5p3zmr$/502+P0+gRLRAQpsvn9NTBHpF6R/Nc8HyniT3Bymf8I=",
+    "phone_number": "+2348034701250",
+    "state": "",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743690791/ekv0vx8cgnoidmwpejvs.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T14:33:13.318Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.user",
+  "pk": "f6f804c3-a0ea-40e4-bb67-3d5f116ab7e3",
+  "fields": {
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2025-04-03T14:31:33.860Z",
+    "email": "test11@gmail.com",
+    "password": "pbkdf2_sha256$870000$PvkizrHJMllE5a97a4mC5l$syYOPwTiX85tbULHXV03yvH+n4FyMghW9xgqXtOVEMc=",
+    "phone_number": "+2348034701250",
+    "state": "",
+    "profile_pic": "https://res.cloudinary.com/de8pdqpun/image/upload/v1743690692/rdmljhrvuoyg1jurga0s.jpg",
+    "is_verified": false,
+    "first_name": "king",
+    "last_name": "dan",
+    "is_active": false,
+    "last_login": "2025-04-03T14:31:34.868Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "241c69b2-bbf7-4f41-b679-df1ab65ae22c",
+  "fields": {
+    "user": "c0c1cb5b-77ca-4281-8ce9-edf60e2849f1",
+    "wallet_balance": 100000.0,
+    "account_number": "0772362977",
+    "date": "2025-04-03T14:33:14.283Z",
+    "bvn": "12345678909",
+    "nin": null,
+    "transaction_pin": "pbkdf2_sha256$870000$4CWxyUQh1hziGPpl3eYJRz$fh5rxEwQYMLHYZC0oC0mlknRRLR4mrJiumi9QuXAuWw=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "3c0edb83-d9db-422d-bd0b-12d363ed8c89",
+  "fields": {
+    "user": "04e0e907-7c7e-4fc6-97fb-f0dc9feb51f0",
+    "wallet_balance": 100000.0,
+    "account_number": "5384228098",
+    "date": "2025-04-03T15:01:04.948Z",
+    "bvn": "pbkdf2_sha256$870000$yZMnXb1p1I8AbStTLL3Xp6$QKkgDPDOx0Xu6fVELi0rHL5IDdqdgXXuGCd2qWeLXII=",
+    "nin": null,
+    "transaction_pin": "pbkdf2_sha256$870000$jW5G0xm9P0YxQRNUcOAKgC$OYgbR+m8jPBiso5Mlc1mdvPkJJE4AftR+GQ+5apQAyk=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "43cdbca5-c634-43b0-9770-824267cca064",
+  "fields": {
+    "user": "03980479-ce3f-45ed-8b77-41cc6d58edb0",
+    "wallet_balance": 100000.0,
+    "account_number": "0397221763",
+    "date": "2025-04-03T15:03:00.947Z",
+    "bvn": null,
+    "nin": null,
+    "transaction_pin": "pbkdf2_sha256$870000$WRFcZ4Omc2sPwR1zSXOfs1$c++2Op/FHMnFd5Ih5GDUQ+VIMkqljeW8o9b45+2L0G8=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "568fb7d5-242b-4478-980d-6840b6ff88fe",
+  "fields": {
+    "user": "a1ed4838-d166-4157-99ef-6b2e86f11028",
+    "wallet_balance": 100000.0,
+    "account_number": "8828163128",
+    "date": "2025-04-03T14:44:17.801Z",
+    "bvn": "pbkdf2_sha256$870000$PKRCtCKLyE9n6WAMDjCedX$aotQj4DISoA28Pi5pRu5WE5+bQUiU687jB8CmEkHMno=",
+    "nin": "pbkdf2_sha256$870000$CI8PGTOCKqrntY2MZaQgrB$GZrLp2md3q8iq4JTzuV/m9exWJfXXPB8DZPq9/OQtLY=",
+    "transaction_pin": "pbkdf2_sha256$870000$dAcE9VfykiF7JaCKmq9DCJ$VfDUBcaKlKDMmQe+cIgA5SkbdoqLZ3VK4SqEZJtvWqI=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "5a2df748-de37-4b2a-96ba-9961b3f730fe",
+  "fields": {
+    "user": "2c0ea75a-65e3-41c2-9608-71f38a16883d",
+    "wallet_balance": 100000.0,
+    "account_number": "8830961075",
+    "date": "2025-04-03T14:13:58.360Z",
+    "bvn": "",
+    "nin": "",
+    "transaction_pin": "pbkdf2_sha256$870000$AByAJEJt7DStU1L8WeTswX$Hdjlbq5kv9GHVP8NEyHiJcerCyFKXCGiQuKaFgfKcMc=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "845c5a30-9b77-4c27-a3de-13f23e50aafd",
+  "fields": {
+    "user": "f6f804c3-a0ea-40e4-bb67-3d5f116ab7e3",
+    "wallet_balance": 100000.0,
+    "account_number": "2726084009",
+    "date": "2025-04-03T14:31:35.840Z",
+    "bvn": "33",
+    "nin": null,
+    "transaction_pin": "pbkdf2_sha256$870000$YjsiJW460A0p5PHnEeQQMc$AfJMWbWcUdnS+MFSdpBFL7sA6lrEsWkIWukPDRH7qtE=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+},
+{
+  "model": "user_authentication.useraccount",
+  "pk": "854a52e5-61c7-4e13-a55f-a4018864335e",
+  "fields": {
+    "user": "60e20683-649c-43bf-8fa7-fd35aa6061ee",
+    "wallet_balance": 100000.0,
+    "account_number": "8394126674",
+    "date": "2025-04-03T14:31:07.515Z",
+    "bvn": null,
+    "nin": null,
+    "transaction_pin": "pbkdf2_sha256$870000$EwgpoRGQbVF0IJZyaSw7wx$yPYRu/O9MXvmBc7wX/lVHSgF+F0PIXCT2rz5rdZ2UDY=",
+    "level_1": true,
+    "level_2": false,
+    "level_3": false,
+    "book_balance": 100000.0
+  }
+}
+]

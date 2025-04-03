@@ -73,21 +73,21 @@ class UserAccount(models.Model):
     )  # Now an actual account number
     date = models.DateTimeField(auto_now_add=True)
     bvn = models.CharField(
-        max_length=20,
+        max_length=255,
         validators=[MinLengthValidator(11)],
         unique=True,
         blank=True,
         null=True,
     )
     nin = models.CharField(
-        max_length=20,
+        max_length=255,
         validators=[MinLengthValidator(11)],
         unique=True,
         blank=True,
         null=True,
     )
     transaction_pin = models.CharField(
-        max_length=4, validators=[MinLengthValidator(4)], blank=True, null=True
+        max_length=255, validators=[MinLengthValidator(4)], blank=True, null=True
     )
 
     # Account Levels as Boolean Fields
