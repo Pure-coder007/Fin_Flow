@@ -6,6 +6,7 @@ from django.core.validators import MinLengthValidator
 from django.conf import settings
 from datetime import datetime, timedelta
 import string, random, uuid
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 
@@ -42,19 +43,24 @@ class User(AbstractUser):
     is_verified = models.BooleanField(default=False)
     first_name = models.CharField(max_length=255, null=False)
     last_name = models.CharField(max_length=255, null=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, auto_now=True)
 
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.email} {self.first_name} {self.last_name}"
 
     def token(self):
-        pass
+        refresh = RefreshToken.for_user(self)
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
 
 
 class UserAccount(models.Model):

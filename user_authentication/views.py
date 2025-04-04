@@ -6,10 +6,16 @@ from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
 from user_authentication.models import User, UserAccount
 import cloudinary.uploader
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 import random, re
+from django.contrib.auth import authenticate
 import string
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.db.models import F, Subquery, OuterRef
+from django.core.cache import cache
 import logging
 from constants import CLOUD_NAME, API_KEY, API_SECRET
 
@@ -201,3 +207,80 @@ class RegisterView(APIView):
             account_number = "".join(random.choices(string.digits, k=10))
             if not UserAccount.objects.filter(account_number=account_number).exists():
                 return account_number
+
+
+
+
+class LoginView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get('password')
+        
+        print(email, password, "TTTTTTTTTTTTTT")
+        
+        if not email:
+            return Response ({"error": "A valid email is required for login"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not password:
+            return Response ({"error": "A valid password is required for login"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        pre_user = User.objects.filter(email=email).first()
+        
+        print(pre_user, "pre user email")
+        
+        pre_user = User.objects.filter(email=email).first()
+        if pre_user:
+            print(f"Stored hashed password: {pre_user.password}")
+            print(f"Password check result: {pre_user.check_password(password)}")
+        
+        user=authenticate(username=email, password=password)
+        print(user, "WWWWWWWQQQQQQQQQWWEEEERRRRR")
+        
+        if not user:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        access_token = str(RefreshToken.for_user(user).access_token)
+        refresh_token = str(RefreshToken.for_user(user))
+        print("Logged in successfully")
+        
+        return Response({"message": "Login Successful",
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                        "user": {
+                            "email": user.email,
+                            "first_name": user.first_name,
+                            "last_name": user.last_name,
+                            "phone_number": user.phone_number,
+                            "profile_pic": user.profile_pic,
+                            "state": user.state
+                        }}, status=status.HTTP_200_OK)  
+                        
+                        
+                        
+                        
+                        
+                        
+class ViewProfile(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    
+    
+    def get(self, request):
+        user = request.user
+        
+        user_account = user.account
+        return Response({
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "phone_number": user.phone_number,
+            "profile_pic": user.profile_pic,
+            "state": user.state,
+            "account_details": {
+                "account_number": user_account.account_number,
+                "wallet_balance": user_account.wallet_balance,
+                "book_balance": user_account.book_balance
+            }
+        }, status=status.HTTP_200_OK)
