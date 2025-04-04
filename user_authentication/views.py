@@ -315,6 +315,7 @@ class ChangePassword(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "change_password" 
     
     def post(self, request):
         user = request.user
@@ -328,7 +329,15 @@ class ChangePassword(APIView):
         if new_password != confirm_new_password:
             return Response({"error": "New password and confirm password do not match"}, status=status.HTTP_400_BAD_REQUEST)
         
+        # common password validation
+        try:
+            validate_password(new_password)
+        except ValidationError as e:
+            return Response({"error": list(e)[0]}, status=status.HTTP_400_BAD_REQUEST)
+        
         user.set_password(new_password)
         user.save()
         
         return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
+    
+    

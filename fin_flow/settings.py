@@ -147,6 +147,13 @@ REST_FRAMEWORK = {
         "register": "10/hour",  # Registration rate limiting
         "login": "5/minute",  # Login attempt rate limiting
     },
+    
+    "DEFAULT_THROTTLE_RATES": {
+        "register": "10/hour",
+        "login": "5/minute",
+        "profile": "100/day",
+        "change_password": "5/hour"  # Add this
+    },
 }
 
 LOGGING = {
