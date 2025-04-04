@@ -284,3 +284,51 @@ class ViewProfile(APIView):
                 "book_balance": user_account.book_balance
             }
         }, status=status.HTTP_200_OK)
+        
+        
+        
+        
+
+
+class UpdateProfile(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    
+    def put(self, request):
+        user = request.user
+        user.first_name = request.data.get("first_name", user.first_name)
+        user.last_name = request.data.get("last_name", user.last_name)
+        user.phone_number = request.data.get("phone_number", user.phone_number)
+        user.profile_pic = request.data.get("profile_pic", user.profile_pic)
+        user.state = request.data.get("state", user.state)
+        
+        user.save()
+        
+        return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
+    
+    
+    
+    
+# Change password
+class ChangePassword(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+        confirm_new_password = request.data.get("confirm_new_password")
+        
+        if not user.check_password(old_password):
+            return Response({"error": "Invalid old password"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if new_password != confirm_new_password:
+            return Response({"error": "New password and confirm password do not match"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(new_password)
+        user.save()
+        
+        return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
