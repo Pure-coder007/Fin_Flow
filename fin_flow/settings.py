@@ -26,16 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xwyn-w^lto&&q93rm5wn-#a^(8ud5+94erakp41g7@--&y&0q@"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -82,16 +81,14 @@ TEMPLATES = [
 WSGI_APPLICATION = "fin_flow.wsgi.application"
 
 
-
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'fin_flow_db'),
-        'USER': os.getenv('DB_USER', 'fin_flow_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'fin_flow_pass'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3307'),
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("DB_NAME", "fin_flow_db"),
+        "USER": os.getenv("DB_USER", "fin_flow_user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "fin_flow_pass"),
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "3307"),
     }
 }
 

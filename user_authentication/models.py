@@ -8,10 +8,6 @@ from datetime import datetime, timedelta
 import string, random, uuid
 
 
-# Random id
-# def random_id():
-#     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -56,8 +52,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-    
-    
+
     def token(self):
         pass
 

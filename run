@@ -2,8 +2,9 @@
 
 # Clean up unused Docker images
 docker image prune -f
+
 # Clean up unused Docker volumes (optional, uncomment to enable)
-# docker volume prune -f
+docker volume prune -f
 
 # Show running Docker containers
 docker ps
@@ -13,6 +14,7 @@ docker compose up --build -d
 
 # Clean up unused Docker images again after the containers are built
 docker image prune -f
+
 # Clean up unused Docker volumes (optional, uncomment to enable)
 # docker volume prune -f
 
@@ -22,8 +24,7 @@ docker ps
 # Run Django migrations inside the Django container
 docker exec -it fin_flow_container python manage.py migrate
 
-# (Optional) Create superuser if needed
-# docker exec -it fin_flow_container python manage.py createsuperuser
+
 
 # Follow the logs of the Django app container (or replace 'fin_flow_container' with your container name)
 docker logs -f fin_flow_container
