@@ -248,8 +248,9 @@ class LoginView(APIView):
         if not user:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        if not email.is_verified:
+        if not user.is_verified:
             return Response({"error": "Please verify your email address before logging in"}, status=status.HTTP_400_BAD_REQUEST)
+        print(user.is_verified, "TTTUUUUUUUUUUUU")
         
         
         access_token = str(RefreshToken.for_user(user).access_token)
