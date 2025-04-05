@@ -100,3 +100,13 @@ class UserAccount(models.Model):
 
     def __str__(self):
         return f"UserAccount for ({self.user.email})"
+
+
+
+class OneTimePassword(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    code=models.CharField(max_length=10, unique=True)
+    
+    def __str__(self):
+        return f"{self.user} - {self.code}"
+    

@@ -12,6 +12,8 @@ from django.contrib.auth.password_validation import validate_password
 import random, re
 from django.contrib.auth import authenticate
 import string
+from .models import OneTimePassword
+from .utils import send_otp
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import F, Subquery, OuterRef
@@ -160,11 +162,15 @@ class RegisterView(APIView):
                     wallet_balance=100000,
                     book_balance=100000,
                 )
-
+                
+                # Send verification email
+                send_otp(user.email)
+                
                 return Response(
                     {
                         "success": True,
                         "message": "Registration successful",
+                        "info": f'Hi {user.first_name}, thanks for signing up, a passcode has been sent to your email for verification.',
                         "data": {
                             "account_number": account.account_number,
                             "email": user.email,
@@ -225,6 +231,8 @@ class LoginView(APIView):
             return Response ({"error": "A valid password is required for login"}, status=status.HTTP_400_BAD_REQUEST)
         
         
+        
+        
         pre_user = User.objects.filter(email=email).first()
         
         print(pre_user, "pre user email")
@@ -239,6 +247,10 @@ class LoginView(APIView):
         
         if not user:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not email.is_verified:
+            return Response({"error": "Please verify your email address before logging in"}, status=status.HTTP_400_BAD_REQUEST)
+        
         
         access_token = str(RefreshToken.for_user(user).access_token)
         refresh_token = str(RefreshToken.for_user(user))
@@ -256,8 +268,23 @@ class LoginView(APIView):
                             "state": user.state
                         }}, status=status.HTTP_200_OK)  
                         
-                        
-                        
+
+# Verify email
+class VerifyEmail(APIView):
+    def post(self, request):
+        otp_code=request.data.get("otp_code")
+        try:
+            user_code=OneTimePassword.objects.get(code=otp_code)
+            user=user_code.user
+            if not user.is_verified:
+                user.is_verified=True
+                user.save()
+                return Response({"message": "Email verified successfully",
+                                "email": user.email},
+                                status=status.HTTP_200_OK)
+            return Response({"error": f"Invalid passcode, the email address {user.email}, is already verified."}, status=status.HTTP_400_BAD_REQUEST)
+        except OneTimePassword.DoesNotExist:
+            return Response({"error": "Invalid passcode"}, status=status.HTTP_400_BAD_REQUEST)
                         
                         
                         
@@ -265,7 +292,6 @@ class ViewProfile(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     throttle_classes = [ScopedRateThrottle]
-    
     
     def get(self, request):
         user = request.user
