@@ -25,3 +25,5 @@ Dockerfile
 
 # Ignore other configuration or secret files
 *.bak
+
+

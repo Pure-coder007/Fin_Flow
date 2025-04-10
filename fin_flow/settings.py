@@ -145,18 +145,24 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_THROTTLE_RATES": {
-        "register": "10/hour",  # Registration rate limiting
-        "login": "5/minute",  # Login attempt rate limiting
-    },
+    
     
     "DEFAULT_THROTTLE_RATES": {
         "register": "10/hour",
-        "login": "5/minute",
+        "login": "3/minute",
         "profile": "100/day",
-        "change_password": "5/hour"  # Add this
+        "change_password": "5/hour",
+        "get_wallet_details": "3/hour",
+        "fund_wallet": "5/hour",
     },
 }
+
+
+
+
+
+
+
 
 LOGGING = {
     "version": 1,
@@ -224,9 +230,17 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-EMAIL_HOST='sandbox.smtp.mailtrap.io'
+EMAIL_HOST=os.getenv("MAIL_SERVER")
 EMAIL_HOST_USER=os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD=os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL=os.getenv("DEFAULT_FROM_EMAIL")
-EMAIL_PORT='2525'
+EMAIL_PORT='587'
 EMAIL_USE_TLS=True
+MAIL_USE_SSL=False
+
+# MAIL_SERVER=smtp.gmail.com
+# # MAIL_PORT=587
+# # MAIL_USERNAME=servicenest060@gmail.com
+# MAIL_PASSWORD=ljbvfniwetagyolk  # Use the Gmail App Password
+# # MAIL_USE_TLS=True
+# MAIL_DEFAULT_SENDER=servicenest@email.com

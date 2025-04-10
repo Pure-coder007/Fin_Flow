@@ -7,6 +7,8 @@ from django.conf import settings
 from datetime import datetime, timedelta
 import string, random, uuid
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils import timezone
+from datetime import timedelta
 
 
 
@@ -61,6 +63,27 @@ class User(AbstractUser):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
+        
+        
+
+class LoginAttempt(models.Model):
+    email = models.EmailField()
+    failed_attempts = models.PositiveIntegerField(default=0)
+    last_attempt_time = models.DateTimeField(auto_now=True)
+
+    def is_locked_out(self):
+        if self.failed_attempts >= 5:
+            return self.get_remaining_lockout_time() > timedelta(seconds=0)
+        return False
+
+    def get_remaining_lockout_time(self):
+        lockout_time = self.last_attempt_time + timedelta(minutes=5)
+        return lockout_time - timezone.now()
+
+    def reset_attempts(self):
+        self.failed_attempts = 0
+        self.save()
+
 
 
 class UserAccount(models.Model):

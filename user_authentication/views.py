@@ -4,13 +4,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
-from user_authentication.models import User, UserAccount
+from user_authentication.models import User, UserAccount, LoginAttempt
 import cloudinary.uploader
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 import random, re
 from django.contrib.auth import authenticate
+from datetime import datetime, timedelta
 import string
 from .models import OneTimePassword
 from .utils import send_otp
@@ -22,6 +23,9 @@ import logging
 from constants import CLOUD_NAME, API_KEY, API_SECRET
 
 logger = logging.getLogger(__name__)
+
+LOCKOUT_DURATION = timedelta(minutes=5)
+
 
 cloudinary.config(api_key=API_KEY, cloud_name=CLOUD_NAME, api_secret=API_SECRET)
 
@@ -221,54 +225,54 @@ class LoginView(APIView):
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get('password')
-        
-        print(email, password, "TTTTTTTTTTTTTT")
-        
+
         if not email:
-            return Response ({"error": "A valid email is required for login"}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({"error": "A valid email is required for login"}, status=status.HTTP_400_BAD_REQUEST)
         if not password:
-            return Response ({"error": "A valid password is required for login"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        
-        
-        
-        pre_user = User.objects.filter(email=email).first()
-        
-        print(pre_user, "pre user email")
-        
-        pre_user = User.objects.filter(email=email).first()
-        if pre_user:
-            print(f"Stored hashed password: {pre_user.password}")
-            print(f"Password check result: {pre_user.check_password(password)}")
-        
-        user=authenticate(username=email, password=password)
-        print(user, "WWWWWWWQQQQQQQQQWWEEEERRRRR")
-        
+            return Response({"error": "A valid password is required for login"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Track login attempts
+        attempt, _ = LoginAttempt.objects.get_or_create(email=email)
+        if attempt.is_locked_out():
+            remaining = attempt.get_remaining_lockout_time()
+            remaining_minutes = int(remaining.total_seconds() // 60) + 1
+            return Response(
+                {"error": f"Too many failed login attempts. Try again in {remaining_minutes} minute(s)."},
+                status=status.HTTP_429_TOO_MANY_REQUESTS
+            )
+
+        user = authenticate(username=email, password=password)
         if not user:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+            attempt.failed_attempts += 1
+            attempt.save()
+            remaining_attempts = max(0, 5 - attempt.failed_attempts)
+            return Response(
+                {"error": f"Invalid credentials. You have {remaining_attempts} attempt(s) left."},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
         if not user.is_verified:
             return Response({"error": "Please verify your email address before logging in"}, status=status.HTTP_400_BAD_REQUEST)
-        print(user.is_verified, "TTTUUUUUUUUUUUU")
-        
-        
+
+        # Successful login: reset attempts
+        attempt.reset_attempts()
+
         access_token = str(RefreshToken.for_user(user).access_token)
         refresh_token = str(RefreshToken.for_user(user))
-        print("Logged in successfully")
-        
-        return Response({"message": "Login Successful",
-                        "access_token": access_token,
-                        "refresh_token": refresh_token,
-                        "user": {
-                            "email": user.email,
-                            "first_name": user.first_name,
-                            "last_name": user.last_name,
-                            "phone_number": user.phone_number,
-                            "profile_pic": user.profile_pic,
-                            "state": user.state
-                        }}, status=status.HTTP_200_OK)  
-                        
+
+        return Response({
+            "message": "Login Successful",
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "user": {
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "phone_number": user.phone_number,
+                "profile_pic": user.profile_pic if user.profile_pic else None,
+                "state": user.state,
+            }
+        }, status=status.HTTP_200_OK)
 
 # Verify email
 class VerifyEmail(APIView):

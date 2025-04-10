@@ -25,3 +25,32 @@ def send_otp(email):
     send_email=EmailMessage(subject=Subject, body=email_body, from_email=from_email, to=[email])
     
     send_email.send(fail_silently=True)
+    
+    
+    
+
+def wallet_funding_success(email, amount):
+    subject = "Wallet funding successful"
+    
+    user = User.objects.get(email=email)
+    email_body = f"""
+    Hi {user.first_name},
+    
+    You have successfully funded your Fin Flow wallet with ₦{amount:,.2f}.
+    
+    Thank you for using Fin Flow to manage your finances.
+    
+    Best regards,
+    Fin Flow Team
+    """
+    
+    from_email = settings.DEFAULT_FROM_EMAIL
+    send_email = EmailMessage(
+        subject=subject, 
+        body=email_body, 
+        from_email=from_email, 
+        to=[user.email]
+    )
+    send_email.send(fail_silently=True)
+    
+    return "Email sent successfully"
