@@ -154,6 +154,7 @@ REST_FRAMEWORK = {
         "change_password": "5/hour",
         "get_wallet_details": "3/hour",
         "fund_wallet": "5/hour",
+        # "send_money": "5/hour",
     },
 }
 

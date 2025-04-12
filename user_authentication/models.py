@@ -10,6 +10,24 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
 from datetime import timedelta
 
+from enum import Enum
+
+class TransactionType(Enum):
+    TRANSFER = 'Transfer'
+    DEPOSIT = 'Deposit'
+    WITHDRAWAL = 'Withdrawal'
+
+
+
+
+def reference_code_generator(size=15, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def session_id_generator(size=15, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
 
 
 class CustomUserManager(BaseUserManager):
@@ -132,4 +150,78 @@ class OneTimePassword(models.Model):
     
     def __str__(self):
         return f"{self.user} - {self.code}"
+    
+    
+
+class TransactionPinAttempt(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name="pin_attempts"
+    )
+    attempts = models.PositiveIntegerField(default=0)
+    last_attempt = models.DateTimeField(auto_now=True)
+    locked_until = models.DateTimeField(null=True, blank=True)
+
+    def is_locked(self):
+        if self.locked_until:
+            if timezone.now() < self.locked_until:
+                return True
+            else:
+                # Auto-reset when lock expires
+                self.reset_attempts()
+                return False
+        return False
+
+    def remaining_lock_time(self):
+        if self.locked_until:
+            remaining = self.locked_until - timezone.now()
+            return max(remaining.total_seconds(), 0)
+        return 0
+
+    def reset_attempts(self):
+        self.attempts = 0
+        self.locked_until = None
+        self.save()
+
+    def increment_attempt(self):  # NOW PROPERLY INDENTED INSIDE THE CLASS
+        self.attempts += 1
+        self.last_attempt = timezone.now()
+        
+        # Lock for 5 minutes after 3 failed attempts
+        if self.attempts >= 3:
+            self.locked_until = timezone.now() + timedelta(minutes=5)
+        self.save()
+    
+    
+
+class Transaction(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="sender")
+    receiver = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="receiver")
+    amount = models.FloatField()
+    reference_id = models.CharField(max_length=255, unique=True, default=reference_code_generator)
+    session_id = models.CharField(max_length=255, unique=True, default=session_id_generator)
+    date = models.DateTimeField(auto_now_add=True)
+    transaction_type = models.CharField(
+        max_length=20,
+        choices=[(tag.value, tag.name) for tag in TransactionType]
+    )
+    narration = models.CharField(max_length=255, null=True)
+    
+    
+    def __str__(self):
+        return f"Transaction for {self.transaction_type} - {self.amount}"
+    
+    
+    
+    
+
+class Notification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    message = models.TextField()
+    data = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
     
