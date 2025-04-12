@@ -8,6 +8,4 @@ urlpatterns = [
     path("update_profile", views.UpdateProfile.as_view(), name="update_profile"),
     path("change_password", views.ChangePassword.as_view(), name="change_password"),
     path("verify_email", views.VerifyEmail.as_view(), name="verify_email"),
-    
-    
 ]

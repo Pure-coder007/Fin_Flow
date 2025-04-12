@@ -166,15 +166,15 @@ class RegisterView(APIView):
                     wallet_balance=100000,
                     book_balance=100000,
                 )
-                
+
                 # Send verification email
                 send_otp(user.email)
-                
+
                 return Response(
                     {
                         "success": True,
                         "message": "Registration successful",
-                        "info": f'Hi {user.first_name}, thanks for signing up, a passcode has been sent to your email for verification.',
+                        "info": f"Hi {user.first_name}, thanks for signing up, a passcode has been sent to your email for verification.",
                         "data": {
                             "account_number": account.account_number,
                             "email": user.email,
@@ -219,17 +219,21 @@ class RegisterView(APIView):
                 return account_number
 
 
-
-
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get("email")
-        password = request.data.get('password')
+        password = request.data.get("password")
 
         if not email:
-            return Response({"error": "A valid email is required for login"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "A valid email is required for login"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if not password:
-            return Response({"error": "A valid password is required for login"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "A valid password is required for login"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # Track login attempts
         attempt, _ = LoginAttempt.objects.get_or_create(email=email)
@@ -237,8 +241,10 @@ class LoginView(APIView):
             remaining = attempt.get_remaining_lockout_time()
             remaining_minutes = int(remaining.total_seconds() // 60) + 1
             return Response(
-                {"error": f"Too many failed login attempts. Try again in {remaining_minutes} minute(s)."},
-                status=status.HTTP_429_TOO_MANY_REQUESTS
+                {
+                    "error": f"Too many failed login attempts. Try again in {remaining_minutes} minute(s)."
+                },
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
             )
 
         user = authenticate(username=email, password=password)
@@ -247,12 +253,17 @@ class LoginView(APIView):
             attempt.save()
             remaining_attempts = max(0, 5 - attempt.failed_attempts)
             return Response(
-                {"error": f"Invalid credentials. You have {remaining_attempts} attempt(s) left."},
-                status=status.HTTP_401_UNAUTHORIZED
+                {
+                    "error": f"Invalid credentials. You have {remaining_attempts} attempt(s) left."
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
             )
 
         if not user.is_verified:
-            return Response({"error": "Please verify your email address before logging in"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Please verify your email address before logging in"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # Successful login: reset attempts
         attempt.reset_attempts()
@@ -260,72 +271,82 @@ class LoginView(APIView):
         access_token = str(RefreshToken.for_user(user).access_token)
         refresh_token = str(RefreshToken.for_user(user))
 
-        return Response({
-            "message": "Login Successful",
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "user": {
-                "email": user.email,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "phone_number": user.phone_number,
-                "profile_pic": user.profile_pic if user.profile_pic else None,
-                "state": user.state,
-            }
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "message": "Login Successful",
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user": {
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "phone_number": user.phone_number,
+                    "profile_pic": user.profile_pic if user.profile_pic else None,
+                    "state": user.state,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
 
 # Verify email
 class VerifyEmail(APIView):
     def post(self, request):
-        otp_code=request.data.get("otp_code")
+        otp_code = request.data.get("otp_code")
         try:
-            user_code=OneTimePassword.objects.get(code=otp_code)
-            user=user_code.user
+            user_code = OneTimePassword.objects.get(code=otp_code)
+            user = user_code.user
             if not user.is_verified:
-                user.is_verified=True
+                user.is_verified = True
                 user.save()
-                return Response({"message": "Email verified successfully",
-                                "email": user.email},
-                                status=status.HTTP_200_OK)
-            return Response({"error": f"Invalid passcode, the email address {user.email}, is already verified."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"message": "Email verified successfully", "email": user.email},
+                    status=status.HTTP_200_OK,
+                )
+            return Response(
+                {
+                    "error": f"Invalid passcode, the email address {user.email}, is already verified."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         except OneTimePassword.DoesNotExist:
-            return Response({"error": "Invalid passcode"}, status=status.HTTP_400_BAD_REQUEST)
-                        
-                        
-                        
+            return Response(
+                {"error": "Invalid passcode"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+
 class ViewProfile(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     throttle_classes = [ScopedRateThrottle]
-    
+
     def get(self, request):
         user = request.user
-        
+
         user_account = user.account
-        return Response({
-            "email": user.email,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "phone_number": user.phone_number,
-            "profile_pic": user.profile_pic,
-            "state": user.state,
-            "account_details": {
-                "account_number": user_account.account_number,
-                "wallet_balance": user_account.wallet_balance,
-                "book_balance": user_account.book_balance
-            }
-        }, status=status.HTTP_200_OK)
-        
-        
-        
-        
+        return Response(
+            {
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "phone_number": user.phone_number,
+                "profile_pic": user.profile_pic,
+                "state": user.state,
+                "account_details": {
+                    "account_number": user_account.account_number,
+                    "wallet_balance": user_account.wallet_balance,
+                    "book_balance": user_account.book_balance,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class UpdateProfile(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     throttle_classes = [ScopedRateThrottle]
-    
+
     def put(self, request):
         user = request.user
         user.first_name = request.data.get("first_name", user.first_name)
@@ -333,42 +354,47 @@ class UpdateProfile(APIView):
         user.phone_number = request.data.get("phone_number", user.phone_number)
         user.profile_pic = request.data.get("profile_pic", user.profile_pic)
         user.state = request.data.get("state", user.state)
-        
+
         user.save()
-        
-        return Response({"message": "Profile updated successfully"}, status=status.HTTP_200_OK)
-    
-    
-    
-    
+
+        return Response(
+            {"message": "Profile updated successfully"}, status=status.HTTP_200_OK
+        )
+
+
 # Change password
 class ChangePassword(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     throttle_classes = [ScopedRateThrottle]
-    throttle_scope = "change_password" 
-    
+    throttle_scope = "change_password"
+
     def post(self, request):
         user = request.user
         old_password = request.data.get("old_password")
         new_password = request.data.get("new_password")
         confirm_new_password = request.data.get("confirm_new_password")
-        
+
         if not user.check_password(old_password):
-            return Response({"error": "Invalid old password"}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"error": "Invalid old password"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
         if new_password != confirm_new_password:
-            return Response({"error": "New password and confirm password do not match"}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"error": "New password and confirm password do not match"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         # common password validation
         try:
             validate_password(new_password)
         except ValidationError as e:
             return Response({"error": list(e)[0]}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         user.set_password(new_password)
         user.save()
-        
-        return Response({"message": "Password changed successfully"}, status=status.HTTP_200_OK)
-    
-    
+
+        return Response(
+            {"message": "Password changed successfully"}, status=status.HTTP_200_OK
+        )

@@ -9,25 +9,21 @@ import string, random, uuid
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
 from datetime import timedelta
-
 from enum import Enum
 
+
 class TransactionType(Enum):
-    TRANSFER = 'Transfer'
-    DEPOSIT = 'Deposit'
-    WITHDRAWAL = 'Withdrawal'
-
-
+    TRANSFER = "Transfer"
+    DEPOSIT = "Deposit"
+    WITHDRAWAL = "Withdrawal"
 
 
 def reference_code_generator(size=15, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+    return "".join(random.choice(chars) for _ in range(size))
 
 
 def session_id_generator(size=15, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
-
-
+    return "".join(random.choice(chars) for _ in range(size))
 
 
 class CustomUserManager(BaseUserManager):
@@ -66,10 +62,9 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, auto_now=True)
 
-
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
-    
+
     objects = CustomUserManager()
 
     def __str__(self):
@@ -81,8 +76,7 @@ class User(AbstractUser):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
-        
-        
+
 
 class LoginAttempt(models.Model):
     email = models.EmailField()
@@ -101,7 +95,6 @@ class LoginAttempt(models.Model):
     def reset_attempts(self):
         self.failed_attempts = 0
         self.save()
-
 
 
 class UserAccount(models.Model):
@@ -143,21 +136,17 @@ class UserAccount(models.Model):
         return f"UserAccount for ({self.user.email})"
 
 
-
 class OneTimePassword(models.Model):
-    user=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    code=models.CharField(max_length=10, unique=True)
-    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    code = models.CharField(max_length=10, unique=True)
+
     def __str__(self):
         return f"{self.user} - {self.code}"
-    
-    
+
 
 class TransactionPinAttempt(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE, 
-        related_name="pin_attempts"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pin_attempts"
     )
     attempts = models.PositiveIntegerField(default=0)
     last_attempt = models.DateTimeField(auto_now=True)
@@ -187,35 +176,37 @@ class TransactionPinAttempt(models.Model):
     def increment_attempt(self):  # NOW PROPERLY INDENTED INSIDE THE CLASS
         self.attempts += 1
         self.last_attempt = timezone.now()
-        
+
         # Lock for 5 minutes after 3 failed attempts
         if self.attempts >= 3:
             self.locked_until = timezone.now() + timedelta(minutes=5)
         self.save()
-    
-    
+
 
 class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sender = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="receiver")
+    sender = models.ForeignKey(
+        UserAccount, on_delete=models.CASCADE, related_name="sender"
+    )
+    receiver = models.ForeignKey(
+        UserAccount, on_delete=models.CASCADE, related_name="receiver"
+    )
     amount = models.FloatField()
-    reference_id = models.CharField(max_length=255, unique=True, default=reference_code_generator)
-    session_id = models.CharField(max_length=255, unique=True, default=session_id_generator)
+    reference_id = models.CharField(
+        max_length=255, unique=True, default=reference_code_generator
+    )
+    session_id = models.CharField(
+        max_length=255, unique=True, default=session_id_generator
+    )
     date = models.DateTimeField(auto_now_add=True)
     transaction_type = models.CharField(
-        max_length=20,
-        choices=[(tag.value, tag.name) for tag in TransactionType]
+        max_length=20, choices=[(tag.value, tag.name) for tag in TransactionType]
     )
     narration = models.CharField(max_length=255, null=True)
-    
-    
+
     def __str__(self):
         return f"Transaction for {self.transaction_type} - {self.amount}"
-    
-    
-    
-    
+
 
 class Notification(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -224,4 +215,3 @@ class Notification(models.Model):
     data = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
-    

@@ -11,8 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")  # Explicitly load .env from project root
 
 
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -84,17 +82,17 @@ WSGI_APPLICATION = "fin_flow.wsgi.application"
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
-        }
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+        "OPTIONS": {
+            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+            "charset": "utf8mb4",
+        },
     }
 }
 
@@ -103,9 +101,6 @@ print(f"DB_USER: {os.getenv('DB_USER')}")
 print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
 print(f"DB_HOST: {os.getenv('DB_HOST')}")
 print(f"DB_PORT: {os.getenv('DB_PORT')}")
-
-
-
 
 
 # Password validation
@@ -127,16 +122,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("Bearer",),
-    
 }
-
-
 
 
 # Add these to your existing settings.py
@@ -145,8 +135,6 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    
-    
     "DEFAULT_THROTTLE_RATES": {
         "register": "10/hour",
         "login": "3/minute",
@@ -154,15 +142,8 @@ REST_FRAMEWORK = {
         "change_password": "5/hour",
         "get_wallet_details": "3/hour",
         "fund_wallet": "5/hour",
-        # "send_money": "5/hour",
     },
 }
-
-
-
-
-
-
 
 
 LOGGING = {
@@ -231,13 +212,13 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-EMAIL_HOST=os.getenv("MAIL_SERVER")
-EMAIL_HOST_USER=os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD=os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL=os.getenv("DEFAULT_FROM_EMAIL")
-EMAIL_PORT='587'
-EMAIL_USE_TLS=True
-MAIL_USE_SSL=False
+EMAIL_HOST = os.getenv("MAIL_SERVER")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+EMAIL_PORT = "587"
+EMAIL_USE_TLS = True
+MAIL_USE_SSL = False
 
 # MAIL_SERVER=smtp.gmail.com
 # # MAIL_PORT=587
